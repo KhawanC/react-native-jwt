@@ -1,23 +1,41 @@
 import React, { useState, useContext } from 'react';
 import { View, StyleSheet, TouchableWithoutFeedback, Keyboard, TouchableOpacity } from 'react-native';
 import { Input, Text, Button } from 'react-native-elements'
-import { AuthContext } from '../context/AuthContext';
+import getRealm from '../../api/RealmInstance';
+import { IUsuario } from '../../models/interface/IUsuario';
+import { LoginService } from '../../services/LoginService';
 
-export const Login = () => {
+export const Login = ({navigation}:any) => {
     const [email, setEmail] = useState('')
     const [senha, setSenha] = useState('')
-    const { login } = useContext(AuthContext)
+
 
     const logar = async (v1:string, v2:string) => {
-        const res = await login(v1, v2);
-        console.log('A resposta do login é: '+res)
+        const res = await LoginService(v1, v2);
+        console.log('A resposta do login é: '+ res)
+        if(res !== null) {
+          console.log(res)
+          navigation.navigate('Home')
+        } else {
+          console.log('Não foi possível logar')
+        }
+    }
+
+    const getLastJWT = async () => {
+      const realm = await getRealm();
+      try {
+        const res = realm.objects<IUsuario>('Usuario');
+        console.log(res)
+      } catch (error) {
+        console.log(error)
+      }
     }
 
     return(
         <HideKeyboard>
             <View style={styles.container}>
                 <View style={styles.boxLogo}>
-                    <Text style={styles.textLogo}>LOGO PROVISÓRIA</Text>
+                    <Text style={styles.textLogo}>LOGO PROVISÓRIA DE UMA EMPRESA FICTÍCIA</Text>
                 </View>
                 <View style={styles.boxFormulario}>
                     <Input
@@ -34,7 +52,7 @@ export const Login = () => {
                 </View>
                 <View style={styles.boxLogin}>
                     <Button
-                        onPress={() => {logar(email, senha); console.log('cliquei')}}
+                        onPress={() => logar(email, senha)}
                         title={'Entrar'}
                         containerStyle={styles.containerBotao}
                         buttonStyle={styles.button}/>
@@ -73,6 +91,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   textLogo: {
+    textAlign: 'center',
     fontWeight: '800',
     fontSize: 25
   },
