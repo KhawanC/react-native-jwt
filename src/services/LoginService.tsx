@@ -5,17 +5,12 @@ import jwt_decode from 'jwt-decode';
 export const LoginService = async (email: string, senha: string) => {
   var tokenDecodificado: any = null;
 
-  try {
-    const resposta = await AxiosInstance.post('/autenticacao', { "email": email, "senha": senha });
-    if (resposta.status === 201) {
-      tokenDecodificado = jwt_decode(resposta.data.token);
-      tokenDecodificado['token'] = resposta.data.token;
+    try {
+      const res = await AxiosInstance.post('/autenticacao', { "email": email, "senha": senha });
+      tokenDecodificado = jwt_decode(res.data.token);
+      tokenDecodificado['token'] = res.data.token;
       return tokenDecodificado;
-    } else {
-      return false;
+    } catch (error) {
+      return undefined
     }
-  } catch (error) {
-    console.log('Erro ao realizar login: ' + JSON.stringify(error));
-    return false;
-  }
 };

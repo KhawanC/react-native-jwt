@@ -24,7 +24,8 @@
       "adaptiveIcon": {
         "foregroundImage": "",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.serra.android"
     },
     "web": {
       "favicon": ""
